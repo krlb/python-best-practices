@@ -1,27 +1,34 @@
-from flask import Flask
-import random
-import logging  # Added import
+import fastapi
+import uvicorn
+from pydantic import BaseModel
 
-app = Flask(__name__)
+app = fastapi.FastAPI()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+class Item(BaseModel):
+    name: str
+    description: str | None = None
+    price: float
+    tax: float | None = None
 
-quotes = [
-    {"text": "Code is like humor. When you have to explain it, it’s bad.", "author": "Cory House"},
-    {"text": "Fix the cause, not the symptom.", "author": "Steve Maguire"},
-    {"text": "Optimism is an occupational hazard of programming.", "author": "Kent Beck"},
-    {"text": "Simplicity is the soul of efficiency.", "author": "Austin Freeman"}
-]
+@app.get('/')
+async def read_root() -> dict[str, str]:
+    return {"message": "Hello, World"}
 
-@app.route('/')
-def hello():
-    # New commit for rebase
-    quote = random.choice(quotes)
-    logger.info(f"Quote displayed: {quote}")  # Added logging
-    return f"{quote['text']} - {quote['author']}"
+@app.get('/items/{item_id}')
+async def read_item(item_id: int) -> dict[str, int]:
+    return {"item_id": item_id}
+
+@app.post('/items/')
+async def create_item(item: Item) -> dict[str, Item]:
+    return {"item": item}
+
+@app.get('/users/{user_id}')
+def get_user(user_id: int) -> dict[str, int]:
+    return {"user_id": user_id}
+
+@app.post('/users/')
+def create_user(user: dict) -> dict[str, dict]:
+    return {"user": user}
 
 if __name__ == '__main__':
-    logger.info("Starting the Flask app...")  # Added logging
-    app.run(debug=True)
+    uvicorn.run(app, host='127.0.0.1', port=8000)
