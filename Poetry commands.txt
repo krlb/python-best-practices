@@ -1,0 +1,33 @@
+
+in git bash
+> cd python-best-practices
+> dir
+> git status
+> git fetch origin
+> git checkout 17-add-linters-and-formatters
+
+In PowerShell:
+> (Invoke-WebRequest -Uri https://install.python-poetry.org -UseBasicParsing).Content | py -
+
+Back in git bash
+> set PATH=%PATH%;C:\Users\krlb\AppData\Roaming\Python\Scripts
+> poetry init
+> poetry --version
+> poetry lock
+> poetry install
+> poetry env info
+> poetry add uvicorn
+> poetry add --group dev ruff
+> poetry add --group dev poethepoet
+
+  
+If you want to run poe commands in a poetry shell:
+> poetry shell
+
+> poetry run poe lint
+> poetry run poe format
+-- Fix errors in code
+> poetry run poe lint (fix errors and check until all is fixed)
+
+> poetry add --group dev mypy
+> poetry run poe typecheck
